@@ -1,10 +1,7 @@
 name: Random Cron
-on:
-  workflow_run:
-    workflows: ["刷步数"]
-    types:
-      - completed
-  workflow_dispatch:
+
+# Disabled to keep the schedule in run.yml fixed.
+on: {}
 
 jobs:
   repo-sync:
