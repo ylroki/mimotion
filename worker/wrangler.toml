@@ -8,3 +8,6 @@ crons = ["40 0,2,4,6,8,10,12 * * *"]
 [vars]
 GITHUB_OWNER = "ylroki"
 GITHUB_REPO = "mimotion"
+
+[observability]
+enabled = true

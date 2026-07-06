@@ -6,6 +6,7 @@ export interface Env {
 
 export async function triggerWorkflow(env: Env): Promise<void> {
   const url = `https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/actions/workflows/run.yml/dispatches`;
+  console.log(`[mimotion] triggering workflow: ${url}`);
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -19,12 +20,15 @@ export async function triggerWorkflow(env: Env): Promise<void> {
   });
   if (!response.ok) {
     const text = await response.text();
+    console.error(`[mimotion] GitHub API error ${response.status}: ${text}`);
     throw new Error(`GitHub API error ${response.status}: ${text}`);
   }
+  console.log(`[mimotion] workflow dispatched successfully (HTTP ${response.status})`);
 }
 
 export default {
   async scheduled(_event: ScheduledEvent, env: Env, _ctx: ExecutionContext): Promise<void> {
+    console.log(`[mimotion] cron triggered at ${new Date().toISOString()}`);
     await triggerWorkflow(env);
   },
 };
