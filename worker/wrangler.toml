@@ -1,0 +1,6 @@
+name = "mimotion-trigger"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+[triggers]
+crons = ["40 0,2,4,6,8,10,12 * * *"]
