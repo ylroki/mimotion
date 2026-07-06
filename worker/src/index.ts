@@ -26,12 +26,24 @@ export async function triggerWorkflow(env: Env): Promise<void> {
   console.log(`[mimotion] workflow dispatched successfully (HTTP ${response.status})`);
 }
 
+// cron has no year field, so one-off date skips are handled here instead
+const SKIP_DATE = '2026-07-06';
+
+function getBeijingDateString(date: Date): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Shanghai' }).format(date);
+}
+
 export default {
   async fetch(): Promise<Response> {
     return new Response('mimotion-trigger: cron-only worker', { status: 200 });
   },
   async scheduled(_event: ScheduledEvent, env: Env, _ctx: ExecutionContext): Promise<void> {
-    console.log(`[mimotion] cron triggered at ${new Date().toISOString()}`);
+    const now = new Date();
+    console.log(`[mimotion] cron triggered at ${now.toISOString()}`);
+    if (getBeijingDateString(now) === SKIP_DATE) {
+      console.log(`[mimotion] skipping trigger, ${SKIP_DATE} is in the skip list`);
+      return;
+    }
     await triggerWorkflow(env);
   },
 };
