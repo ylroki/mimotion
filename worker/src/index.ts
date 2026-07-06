@@ -27,6 +27,9 @@ export async function triggerWorkflow(env: Env): Promise<void> {
 }
 
 export default {
+  async fetch(): Promise<Response> {
+    return new Response('mimotion-trigger: cron-only worker', { status: 200 });
+  },
   async scheduled(_event: ScheduledEvent, env: Env, _ctx: ExecutionContext): Promise<void> {
     console.log(`[mimotion] cron triggered at ${new Date().toISOString()}`);
     await triggerWorkflow(env);
